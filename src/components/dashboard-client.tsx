@@ -6,22 +6,20 @@ import { Cake } from "lucide-react"
 import Link from "next/link"
 
 import { Button } from "@/components/ui/button"
-import { useToast } from "@/hooks/use-toast"
 import { useAuth } from "@/lib/auth"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function DashboardClient() {
-  const { user, isLoading } = useAuth()
-  const { toast } = useToast()
+  const { user, loading } = useAuth()
   const router = useRouter()
 
   useEffect(() => {
-    if (!isLoading && !user) {
+    if (!loading && !user) {
       router.push("/login")
     }
-  }, [user, isLoading, router])
+  }, )
 
-  if (isLoading) {
+  if (loading) {
     return <div className="container py-10">Loading...</div>
   }
 
@@ -30,7 +28,7 @@ export default function DashboardClient() {
   }
 
   return (
-    <div className="container py-10">
+    <div className="px-10 py-10">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Welcome, {user.name}</h1>
       </div>
@@ -57,7 +55,7 @@ export default function DashboardClient() {
             <CardDescription>Your favorite cakes and pastries</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground">You haven't saved any favorites yet.</p>
+            <p className="text-sm text-muted-foreground">You haven&#39;t saved any favorites yet.</p>
           </CardContent>
           <CardFooter>
             <Button variant="outline" asChild className="w-full">

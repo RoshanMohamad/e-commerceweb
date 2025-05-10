@@ -24,19 +24,19 @@ export default function CheckoutSuccessPage() {
       </p>
 
       <div className="bg-gray-50 rounded-lg p-6 mb-8">
-        <h2 className="text-lg font-semibold mb-4">What's Next?</h2>
+        <h2 className="text-lg font-semibold mb-4">What&#39;s Next?</h2>
         <div className="space-y-2 text-left">
           <p className="flex items-start">
             <span className="bg-pink-100 text-pink-600 w-6 h-6 rounded-full flex items-center justify-center mr-2 text-sm flex-shrink-0">
               1
             </span>
-            <span>You'll receive an order confirmation email with details of your purchase.</span>
+            <span>You&#39;ll receive an order confirmation email with details of your purchase.</span>
           </p>
           <p className="flex items-start">
             <span className="bg-pink-100 text-pink-600 w-6 h-6 rounded-full flex items-center justify-center mr-2 text-sm flex-shrink-0">
               2
             </span>
-            <span>We'll prepare your order and notify you when it's ready for pickup or delivery.</span>
+            <span>We&#39;ll prepare your order and notify you when it&#39;s ready for pickup or delivery.</span>
           </p>
           <p className="flex items-start">
             <span className="bg-pink-100 text-pink-600 w-6 h-6 rounded-full flex items-center justify-center mr-2 text-sm flex-shrink-0">

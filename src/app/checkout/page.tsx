@@ -41,7 +41,15 @@ export default function CheckoutPage() {
     )
   }
 
-  const handlePaymentSubmit = async (paymentDetails: any) => {
+  interface PaymentDetails {
+  cardNumber: string;
+  expiry: string;
+  cvc: string;
+  name?: string;
+  // Add other necessary fields
+}
+
+const handlePaymentSubmit = async (paymentDetails: PaymentDetails) => {
   setIsProcessing(true)
 
   try {
@@ -70,7 +78,7 @@ export default function CheckoutPage() {
 }
 
   return (
-    <div className="px-20 py-10">
+    <div className="px-60 py-10">
       <Link href="/cart" className="flex items-center text-sm mb-8 hover:text-pink-600">
         <ArrowLeft className="mr-2 h-4 w-4" />
         Back to Cart
@@ -210,7 +218,7 @@ export default function CheckoutPage() {
                   className="w-full"
                   size="lg"
                   disabled={isProcessing || !user}
-                  onClick={() => document.getElementById("payment-form")?.requestSubmit()}
+                  onClick={() => document.getElementById("payment-form")}
                 >
                   {isProcessing ? (
                     <>

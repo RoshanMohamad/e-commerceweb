@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
 import { Cake, ShoppingCart, User, Menu, X } from "lucide-react"
 import { useState } from "react"
 
@@ -16,7 +15,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 export function NavbarClient() {
-  const pathname = usePathname()
   const { user, signOut } = useAuth()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
@@ -29,7 +27,7 @@ export function NavbarClient() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky px-8 top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <Cake className="h-6 w-6 text-pink-600" />
