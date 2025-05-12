@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-
+import { toast } from "sonner"
 import { useState, useEffect } from "react"
 import { CalendarIcon } from "lucide-react"
 import { format } from "date-fns"
@@ -52,9 +52,20 @@ export function EditTaskDialog({ task, open, onOpenChange, onUpdateTask }: EditT
     const success = await onUpdateTask(task.id, {
       title,
       description,
-      dueDate,
     })
+  
     setIsSubmitting(false)
+
+    if (success) {
+    // Close the dialog
+    onOpenChange(false)
+
+    // Optionally show a success message
+    toast("Task updated successfully!")
+  } else {
+    // Optionally show an error message
+    toast("Failed to update the task. Please try again.")
+  }
   }
 
   return (
