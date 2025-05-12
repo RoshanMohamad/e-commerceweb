@@ -10,9 +10,21 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
+interface PaymentDetails {
+  cardNumber?: string
+  cardName?: string
+  expiryMonth?: string
+  expiryYear?: string
+  cvv?: string
+  accountNumber?: string
+  routingNumber?: string
+  bankName?: string
+  walletEmail?: string
+}
+
 interface PaymentDetailsFormProps {
   paymentMethod: string
-  onSubmit: (details: any) => void
+  onSubmit: (details: PaymentDetails) => void
   isProcessing: boolean
 }
 
@@ -197,7 +209,7 @@ export function PaymentDetailsForm({ paymentMethod, onSubmit, isProcessing }: Pa
             required
             disabled={isProcessing}
           />
-          <p className="text-xs text-gray-500 mt-1">You will be redirected to complete payment after clicking "Pay".</p>
+          <p className="text-xs text-gray-500 mt-1">You will be redirected to complete payment after clicking .</p>
         </div>
       )}
 
