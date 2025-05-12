@@ -1,7 +1,14 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Filter } from "lucide-react"
-
+import superDad from "../../../public/img/birthday/Super-dad-300x300.png"
+import Mud from "../../../public/img/cupcake/Chocolate_Mud_Cup_Cake_1024x1024@2x.webp"
+import sublime from '../../../public/img/birthday/Sublime-Lime-300x300.webp'
+import IceCream from "../../../public/img/cupcake/ice cream.jpeg"
+import BirthDay from "../../../public/img/birthday/CC1153F7-B40C-4CB0-A654-746787BA408B-460x460.webp"
+import Cupcake from "../../../public/img/cupcake/velvet.jpeg"
+import Pastries from "../../../public/img/birthday/Cheery-Sunflower-300x300.webp"
+import wedding from '../../../public/img/birthday/35_621823e7-857a-4870-856d-4a29ab2da622_1024x1024@2x.webp'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import {
@@ -16,7 +23,7 @@ import {
 
 export default function ProductsPage() {
   return (
-    <div className="container py-10">
+    <div className="px-10 py-10">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-bold mb-2">Our Cakes</h1>
@@ -71,11 +78,10 @@ export default function ProductsPage() {
                 )}
               </div>
               <CardContent className="p-4">
-                <div className="flex justify-between items-start mb-2">
+                <div className="justify-center text-center mb-2">
                   <h3 className="font-semibold text-lg">{product.name}</h3>
-                  <p className="font-bold text-pink-600">${product.price.toFixed(2)}</p>
+                  <p className="font-bold text-pink-600">Rs.{product.price.toFixed(2)}</p>
                 </div>
-                <p className="text-gray-600 text-sm line-clamp-2">{product.description}</p>
               </CardContent>
             </Card>
           </Link>
@@ -92,9 +98,8 @@ const products = [
     name: "Chocolate Truffle Cake",
     slug: "chocolate-truffle-cake",
     description: "Rich chocolate cake with smooth truffle frosting and chocolate ganache.",
-    price: 42.99,
-    image: "/placeholder.svg?height=300&width=300",
-    badge: "Bestseller",
+    price: 420.99,
+    image: superDad,
     category: "birthday",
   },
   {
@@ -102,8 +107,8 @@ const products = [
     name: "Strawberry Shortcake",
     slug: "strawberry-shortcake",
     description: "Light vanilla sponge with fresh strawberries and whipped cream.",
-    price: 38.99,
-    image: "/placeholder.svg?height=300&width=300",
+    price: 380.99,
+    image: wedding,
     category: "birthday",
   },
   {
@@ -111,8 +116,8 @@ const products = [
     name: "Red Velvet Delight",
     slug: "red-velvet-delight",
     description: "Classic red velvet cake with cream cheese frosting and red velvet crumbs.",
-    price: 44.99,
-    image: "/placeholder.svg?height=300&width=300",
+    price: 440.99,
+    image: Cupcake,
     badge: "New",
     category: "birthday",
   },
@@ -121,8 +126,8 @@ const products = [
     name: "Lemon Blueberry Cake",
     slug: "lemon-blueberry-cake",
     description: "Tangy lemon cake with fresh blueberries and lemon buttercream.",
-    price: 39.99,
-    image: "/placeholder.svg?height=300&width=300",
+    price: 390.99,
+    image: BirthDay,
     category: "birthday",
   },
   {
@@ -130,8 +135,8 @@ const products = [
     name: "Tiramisu Cake",
     slug: "tiramisu-cake",
     description: "Coffee-soaked layers with mascarpone cream and cocoa dusting.",
-    price: 46.99,
-    image: "/placeholder.svg?height=300&width=300",
+    price: 460.99,
+    image: IceCream,
     category: "pastries",
   },
   {
@@ -139,8 +144,8 @@ const products = [
     name: "Black Forest Cake",
     slug: "black-forest-cake",
     description: "Chocolate sponge with cherries, whipped cream, and chocolate shavings.",
-    price: 45.99,
-    image: "/placeholder.svg?height=300&width=300",
+    price: 450.99,
+    image: Pastries,
     category: "birthday",
   },
   {
@@ -149,7 +154,7 @@ const products = [
     slug: "vanilla-buttercream-wedding-cake",
     description: "Three-tier vanilla cake with smooth buttercream frosting and elegant decorations.",
     price: 249.99,
-    image: "/placeholder.svg?height=300&width=300",
+    image: sublime,
     category: "wedding",
   },
   {
@@ -157,8 +162,9 @@ const products = [
     name: "Chocolate Cupcakes (6 pack)",
     slug: "chocolate-cupcakes",
     description: "Moist chocolate cupcakes with chocolate buttercream frosting.",
-    price: 18.99,
-    image: "/placeholder.svg?height=300&width=300",
+    price: 180.99,
+    image: Mud,
     category: "cupcakes",
   },
+
 ]

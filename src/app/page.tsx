@@ -1,9 +1,16 @@
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowRight, Cake } from "lucide-react"
-
+import { ArrowRight} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import superDad from "../../public/img/birthday/Super-dad-300x300.png"
+import Mud from "../../public/img/cupcake/Chocolate_Mud_Cup_Cake_1024x1024@2x.webp"
+import sublime from '../../public/img/birthday/Sublime-Lime-300x300.webp'
+import IceCream from "../../public/img/cupcake/ice cream.jpeg"
+import BirthDay from "../../public/img/birthday/CC1153F7-B40C-4CB0-A654-746787BA408B-460x460.webp"
+import Cupcake from "../../public/img/cupcake/velvet.jpeg"
+import Pastries from "../../public/img/birthday/Cheery-Sunflower-300x300.webp"
+import wedding from '../../public/img/birthday/35_621823e7-857a-4870-856d-4a29ab2da622_1024x1024@2x.webp'
 
 export default function HomePage() {
   return (
@@ -48,18 +55,12 @@ export default function HomePage() {
                 <Card className="overflow-hidden h-full transition-all duration-200 hover:shadow-md">
                   <div className="relative h-64 w-full">
                     <Image src={product.image || "/placeholder.svg"} alt={product.name} fill className="object-cover" />
-                    {product.badge && (
-                      <span className="absolute top-2 right-2 bg-pink-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
-                        {product.badge}
-                      </span>
-                    )}
                   </div>
                   <CardContent className="p-4">
-                    <div className="flex justify-between items-start mb-2">
+                    <div className="justify-center text-center mb-2">
                       <h3 className="font-semibold text-lg">{product.name}</h3>
-                      <p className="font-bold text-pink-600">${product.price.toFixed(2)}</p>
+                      <p className="font-bold text-pink-600">Rs.{product.price.toFixed(2)}</p>
                     </div>
-                    <p className="text-gray-600 text-sm line-clamp-2">{product.description}</p>
                   </CardContent>
                 </Card>
               </Link>
@@ -101,7 +102,7 @@ export default function HomePage() {
             <div className="md:w-1/2">
               <h2 className="text-3xl font-bold mb-4">Our Story</h2>
               <p className="text-gray-600 mb-4">
-                Sweet Delights Bakery was founded in 2010 with a simple mission: to create delicious, handcrafted cakes
+                Sweet Delights Bakery was founded in 2024 with a simple mission: to create delicious, handcrafted cakes
                 that bring joy to every celebration. Our master bakers use only the finest ingredients to ensure every
                 bite is pure bliss.
               </p>
@@ -114,36 +115,16 @@ export default function HomePage() {
               </Button>
             </div>
             <div className="md:w-1/2 relative h-[400px] w-full rounded-lg overflow-hidden">
-              <Image src="/placeholder.svg?height=400&width=600" alt="Our bakery" fill className="object-cover" />
+              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2801.398637823976!2d79.90028277984767!3d6.797092022008967!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae245416b7f34b5%3A0x7bd32721ab02560e!2sUniversity%20of%20Moratuwa!5e0!3m2!1sen!2slk!4v1746711044149!5m2!1sen!2slk" width="600" height="450"></iframe>
             </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-pink-100 py-8 px-4">
+      <footer className="bg-pink-100 py-4 px-4">
         <div className="container mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center mb-4 md:mb-0">
-              <Cake className="h-6 w-6 text-pink-600 mr-2" />
-              <span className="text-xl font-bold">Sweet Delights</span>
-            </div>
-            <div className="flex flex-col md:flex-row gap-4 md:gap-8">
-              <Link href="/products" className="text-gray-700 hover:text-pink-600">
-                Products
-              </Link>
-              <Link href="/about" className="text-gray-700 hover:text-pink-600">
-                About Us
-              </Link>
-              <Link href="/contact" className="text-gray-700 hover:text-pink-600">
-                Contact
-              </Link>
-              <Link href="/cart" className="text-gray-700 hover:text-pink-600">
-                Cart
-              </Link>
-            </div>
-          </div>
-          <div className="border-t border-pink-200 mt-6 pt-6 text-center text-gray-500 text-sm">
+          <div className="border-t border-pink-200 text-center text-gray-500 text-sm">
             © {new Date().getFullYear()} Sweet Delights Bakery. All rights reserved.
           </div>
         </div>
@@ -158,35 +139,30 @@ const featuredProducts = [
     id: 1,
     name: "Chocolate Truffle Cake",
     slug: "chocolate-truffle-cake",
-    description: "Rich chocolate cake with smooth truffle frosting and chocolate ganache.",
-    price: 42.99,
-    image: "/placeholder.svg?height=300&width=300",
-    badge: "Bestseller",
+    price: 420.99,
+    image: superDad,
   },
   {
     id: 2,
     name: "Strawberry Shortcake",
     slug: "strawberry-shortcake",
-    description: "Light vanilla sponge with fresh strawberries and whipped cream.",
-    price: 38.99,
-    image: "/placeholder.svg?height=300&width=300",
+    price: 380.99,
+    image: Mud,
   },
   {
     id: 3,
     name: "Red Velvet Delight",
     slug: "red-velvet-delight",
-    description: "Classic red velvet cake with cream cheese frosting and red velvet crumbs.",
-    price: 44.99,
-    image: "/placeholder.svg?height=300&width=300",
-    badge: "New",
+    price: 440.99,
+    image: sublime,
+    // badge: "New",
   },
   {
     id: 4,
     name: "Lemon Blueberry Cake",
     slug: "lemon-blueberry-cake",
-    description: "Tangy lemon cake with fresh blueberries and lemon buttercream.",
-    price: 39.99,
-    image: "/placeholder.svg?height=300&width=300",
+    price: 390.99,
+    image: IceCream,
   },
 ]
 
@@ -195,24 +171,24 @@ const categories = [
     id: 1,
     name: "Birthday Cakes",
     slug: "birthday",
-    image: "/placeholder.svg?height=300&width=300",
+    image: BirthDay,
   },
   {
     id: 2,
     name: "Wedding Cakes",
     slug: "wedding",
-    image: "/placeholder.svg?height=300&width=300",
+    image: wedding,
   },
   {
     id: 3,
     name: "Cupcakes",
     slug: "cupcakes",
-    image: "/placeholder.svg?height=300&width=300",
+    image: Cupcake,
   },
   {
     id: 4,
     name: "Pastries",
     slug: "pastries",
-    image: "/placeholder.svg?height=300&width=300",
+    image: Pastries,
   },
 ]

@@ -1,10 +1,17 @@
 "use client"
 
-import { useState } from "react"
+import { useState ,use} from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, Minus, Plus, ShoppingCart } from "lucide-react"
-
+import superDad from "../../../../public/img/birthday/Super-dad-300x300.png"
+import Mud from "../../../../public/img/cupcake/Chocolate_Mud_Cup_Cake_1024x1024@2x.webp"
+import sublime from '../../../../public/img/birthday/Sublime-Lime-300x300.webp'
+import IceCream from "../../../../public/img/cupcake/ice cream.jpeg"
+import BirthDay from "../../../../public/img/birthday/CC1153F7-B40C-4CB0-A654-746787BA408B-460x460.webp"
+import Cupcake from "../../../../public/img/cupcake/velvet.jpeg"
+import Pastries from "../../../../public/img/birthday/Cheery-Sunflower-300x300.webp"
+import wedding from '../../../../public/img/birthday/35_621823e7-857a-4870-856d-4a29ab2da622_1024x1024@2x.webp'
 import { Button } from "@/components/ui/button"
 import { useCart } from "@/components/cart-provider"
 import { toast } from "sonner"
@@ -14,15 +21,15 @@ const getProductBySlug = (slug: string) => {
   return products.find((product) => product.slug === slug) || null
 }
 
-export default function ProductPage({ params }: { params: { slug: string } }) {
-  const { slug } = params
+export default function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+  const  {slug}  = use(params)
   const product = getProductBySlug(slug)
   const [quantity, setQuantity] = useState(1)
   const { addToCart } = useCart()
 
   if (!product) {
     return (
-      <div className="container py-20 text-center">
+      <div className="px-10 py-20 text-center">
         <h1 className="text-2xl font-bold mb-4">Product not found</h1>
         <p className="mb-8">The product you are looking for does not exist.</p>
         <Button asChild>
@@ -56,7 +63,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
   }
 
   return (
-    <div className="container py-10">
+    <div className="px-10 py-10">
       <Link href="/products" className="flex items-center text-sm mb-8 hover:text-pink-600">
         <ArrowLeft className="mr-2 h-4 w-4" />
         Back to Products
@@ -130,7 +137,7 @@ const products = [
     description:
       "Rich chocolate cake with smooth truffle frosting and chocolate ganache. Made with premium dark chocolate and fresh cream, this cake is perfect for chocolate lovers. Each bite delivers an intense chocolate flavor with a melt-in-your-mouth texture.",
     price: 42.99,
-    image: "/placeholder.svg?height=300&width=300",
+    image: superDad,
     badge: "Bestseller",
     category: "birthday",
   },
@@ -141,7 +148,7 @@ const products = [
     description:
       "Light vanilla sponge with fresh strawberries and whipped cream. This classic cake features layers of fluffy sponge cake, sweet strawberries, and light whipped cream frosting. It's a refreshing choice for spring and summer celebrations.",
     price: 38.99,
-    image: "/placeholder.svg?height=300&width=300",
+    image: Pastries,
     category: "birthday",
   },
   {
@@ -151,7 +158,7 @@ const products = [
     description:
       "Classic red velvet cake with cream cheese frosting and red velvet crumbs. Our red velvet cake has a subtle cocoa flavor with a beautiful red color. The tangy cream cheese frosting perfectly complements the soft, moist cake layers.",
     price: 44.99,
-    image: "/placeholder.svg?height=300&width=300",
+    image: Mud,
     badge: "New",
     category: "birthday",
   },
@@ -162,7 +169,7 @@ const products = [
     description:
       "Tangy lemon cake with fresh blueberries and lemon buttercream. This bright, flavorful cake combines zesty lemon with sweet blueberries for a perfect balance. The light lemon buttercream adds just the right amount of sweetness.",
     price: 39.99,
-    image: "/placeholder.svg?height=300&width=300",
+    image: sublime,
     category: "birthday",
   },
   {
@@ -172,7 +179,7 @@ const products = [
     description:
       "Coffee-soaked layers with mascarpone cream and cocoa dusting. Inspired by the classic Italian dessert, this cake features coffee-infused sponge layers, creamy mascarpone filling, and a dusting of cocoa powder on top.",
     price: 46.99,
-    image: "/placeholder.svg?height=300&width=300",
+    image: IceCream,
     category: "pastries",
   },
   {
@@ -182,7 +189,7 @@ const products = [
     description:
       "Chocolate sponge with cherries, whipped cream, and chocolate shavings. This traditional German cake combines rich chocolate sponge with tart cherries and light whipped cream. The chocolate shavings add an elegant finishing touch.",
     price: 45.99,
-    image: "/placeholder.svg?height=300&width=300",
+    image: BirthDay,
     category: "birthday",
   },
   {
@@ -192,7 +199,7 @@ const products = [
     description:
       "Three-tier vanilla cake with smooth buttercream frosting and elegant decorations. This stunning wedding cake features premium Madagascar vanilla and a silky buttercream finish. It's designed to be the perfect centerpiece for your special day.",
     price: 249.99,
-    image: "/placeholder.svg?height=300&width=300",
+    image: wedding,
     category: "wedding",
   },
   {
@@ -202,7 +209,7 @@ const products = [
     description:
       "Moist chocolate cupcakes with chocolate buttercream frosting. These delicious cupcakes are perfect for parties or as a sweet treat. Each cupcake is topped with a swirl of rich chocolate buttercream and chocolate sprinkles.",
     price: 18.99,
-    image: "/placeholder.svg?height=300&width=300",
+    image: Cupcake,
     category: "cupcakes",
   },
 ]
