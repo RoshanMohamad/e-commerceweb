@@ -14,7 +14,7 @@ import { PaymentDetailsForm } from "@/components/payment-details-form"
 import { useAuth } from "@/lib/auth"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { processPayment } from "@/lib/payment"
-import {toast} from 'sonner'
+import { toast } from 'sonner'
 
 export default function CheckoutPage() {
   const { cart, clearCart } = useCart()
@@ -42,41 +42,43 @@ export default function CheckoutPage() {
   }
 
   interface PaymentDetails {
-  cardNumber: string;
-  expiry: string;
-  cvc: string;
-  name?: string;
-  // Add other necessary fields
-}
+    cardNumber: string;
+    expiry: string;
+    cvc: string;
+    name?: string;
+    // Add other necessary fields
+  }
 
+ // In your checkout component
 const handlePaymentSubmit = async (paymentDetails: PaymentDetails) => {
-  setIsProcessing(true)
+  setIsProcessing(true);
 
   try {
-    // Validate payment details
-    if (!paymentDetails || Object.keys(paymentDetails).length === 0) {
-      throw new Error("Invalid payment details. Please fill out all required fields.")
-    }
+    // Convert cart items to payment items
+    const paymentItems = cart.map(item => ({
+      id: item.id.toString(),
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity
+    }));
 
-    // Process payment (mock)
+    // Process payment
     await processPayment({
       amount: total,
       paymentMethod: selectedPaymentMethod,
       paymentDetails,
-      items: cart,
-    })
+      items: paymentItems
+    });
 
-    // Clear cart and redirect to success page
-    clearCart()
-    toast("Your order has been placed successfully.")
-    router.push("/checkout/success")
-  } catch {
-    toast( "There was an error processing your payment. Please try again.")
+    // Clear cart and redirect
+    clearCart();
+    router.push("/checkout/success");
+  } catch (error) {
+    toast.error(error instanceof Error ? error.message : "Payment failed");
   } finally {
-    setIsProcessing(false)
+    setIsProcessing(false);
   }
-}
-
+};
   return (
     <div className="px-60 py-10">
       <Link href="/cart" className="flex items-center text-sm mb-8 hover:text-pink-600">
@@ -160,8 +162,8 @@ const handlePaymentSubmit = async (paymentDetails: PaymentDetails) => {
             <CardContent>
               <PaymentDetailsForm
                 paymentMethod={selectedPaymentMethod}
-                onSubmit={handlePaymentSubmit}
                 isProcessing={isProcessing}
+                onSubmit={handlePaymentSubmit}
               />
             </CardContent>
           </Card>

@@ -7,7 +7,7 @@ export interface PaymentDetails {
 }
 
 export interface PaymentItem {
-  id: string;
+  id: string | number;
   name: string;
   price: number;
   quantity: number;
