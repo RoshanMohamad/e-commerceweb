@@ -10,22 +10,33 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
-interface PaymentDetails {
-  cardNumber?: string
-  cardName?: string
-  expiryMonth?: string
-  expiryYear?: string
-  cvv?: string
-  accountNumber?: string
-  routingNumber?: string
-  bankName?: string
-  walletEmail?: string
-}
+// interface PaymentDetails {
+//   cardNumber?: string
+//   cardName?: string
+//   expiryMonth?: string
+//   expiryYear?: string
+//   cvv?: string
+//   accountNumber?: string
+//   routingNumber?: string
+//   bankName?: string
+//   walletEmail?: string
+// }
 
+// components/payment-details-form.tsx
 interface PaymentDetailsFormProps {
-  paymentMethod: string
-  onSubmit: (details: PaymentDetails) => void
-  isProcessing: boolean
+  paymentMethod: string;
+  onSubmit: (paymentDetails: {
+    cardNumber?: string | undefined;
+    cardName?: string | undefined;
+    expiryMonth?: string | undefined;
+    expiryYear?: string | undefined;
+    cvv?: string | undefined;
+    accountNumber?: string | undefined;
+    routingNumber?: string | undefined;
+    bankName?: string | undefined;
+    walletEmail?: string | undefined;
+}) => Promise<void>
+  isProcessing: boolean;
 }
 
 export function PaymentDetailsForm({ paymentMethod, onSubmit, isProcessing }: PaymentDetailsFormProps) {
@@ -42,27 +53,33 @@ export function PaymentDetailsForm({ paymentMethod, onSubmit, isProcessing }: Pa
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
-    let paymentDetails = {}
-
-    if (paymentMethod === "credit-card") {
-      paymentDetails = {
-        cardNumber,
+    const paymentDetails = {
+      cardNumber,
         cardName,
         expiryMonth,
         expiryYear,
         cvv,
-      }
-    } else if (paymentMethod === "bank-transfer") {
-      paymentDetails = {
-        accountNumber,
-        routingNumber,
-        bankName,
-      }
-    } else if (paymentMethod === "digital-wallet") {
-      paymentDetails = {
-        walletEmail,
-      }
     }
+
+    // if (paymentMethod === "credit-card") {
+    //   paymentDetails = {
+    //     cardNumber,
+    //     cardName,
+    //     expiryMonth,
+    //     expiryYear,
+    //     cvv,
+    //   }
+    // } else if (paymentMethod === "bank-transfer") {
+    //   paymentDetails = {
+    //     accountNumber,
+    //     routingNumber,
+    //     bankName,
+    //   }
+    // } else if (paymentMethod === "digital-wallet") {
+    //   paymentDetails = {
+    //     walletEmail,
+    //   }
+    // }
 
     onSubmit(paymentDetails)
   }

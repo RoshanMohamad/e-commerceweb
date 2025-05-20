@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import {  useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
@@ -48,9 +48,9 @@ export default function CheckoutPage() {
     name?: string;
     // Add other necessary fields
   }
+  
 
- // In your checkout component
-const handlePaymentSubmit = async (paymentDetails: PaymentDetails) => {
+ const handlePaymentSubmit = async (paymentDetails: PaymentDetails) => {
   setIsProcessing(true);
 
   try {
@@ -66,11 +66,14 @@ const handlePaymentSubmit = async (paymentDetails: PaymentDetails) => {
     await processPayment({
       amount: total,
       paymentMethod: selectedPaymentMethod,
-      paymentDetails,
+      paymentDetails: {
+        cardNumber: paymentDetails.cardNumber,
+        expiry: paymentDetails.expiry,
+        cvc: paymentDetails.cvc
+      },
       items: paymentItems
     });
 
-    // Clear cart and redirect
     clearCart();
     router.push("/checkout/success");
   } catch (error) {
@@ -79,6 +82,7 @@ const handlePaymentSubmit = async (paymentDetails: PaymentDetails) => {
     setIsProcessing(false);
   }
 };
+
   return (
     <div className="px-60 py-10">
       <Link href="/cart" className="flex items-center text-sm mb-8 hover:text-pink-600">
@@ -162,7 +166,7 @@ const handlePaymentSubmit = async (paymentDetails: PaymentDetails) => {
             <CardContent>
               <PaymentDetailsForm
                 paymentMethod={selectedPaymentMethod}
-                isProcessing={isProcessing}
+                isProcessing={isProcessing || !user}
                 onSubmit={handlePaymentSubmit}
               />
             </CardContent>

@@ -11,7 +11,6 @@ import { Separator } from "@/components/ui/separator"
 export default function CartPage() {
   const { cart, updateQuantity, removeFromCart } = useCart()
 
-
   const subtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0)
   const shipping = subtotal > 0 ? 5.99 : 0
   const total = subtotal + shipping
@@ -21,7 +20,7 @@ export default function CartPage() {
       <div className="container py-20 text-center">
         <ShoppingBag className="h-16 w-16 mx-auto text-gray-300 mb-6" />
         <h1 className="text-2xl font-bold mb-4">Your cart is empty</h1>
-        <p className="mb-8">Looks like you haven&#39;t added any cakes to your cart yet.</p>
+        <p className="mb-8">Looks like you havent added any cakes to your cart yet.</p>
         <Button asChild>
           <Link href="/products">Continue Shopping</Link>
         </Button>
@@ -30,7 +29,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="px-60 py-32">
+    <div className="px-10 py-10">
       <h1 className="text-3xl font-bold mb-8">Your Cart</h1>
 
       <div className="grid md:grid-cols-3 gap-8">

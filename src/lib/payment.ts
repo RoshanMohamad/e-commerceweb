@@ -1,9 +1,10 @@
 // types/payment.ts
 export interface PaymentDetails {
-  cardNumber?: string;
-  expiryDate?: string;
-  cvv?: string;
-  // Add other payment method specific details
+  cardNumber: string;
+  expiry: string;  // Changed from expiryDate to match error
+  cvc: string;    // Changed from cvv to match error
+  name?: string;
+  // Add other payment method specific fields
 }
 
 export interface PaymentItem {

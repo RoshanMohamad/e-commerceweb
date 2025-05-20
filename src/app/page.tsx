@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowRight} from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import superDad from "../../public/img/birthday/Super-dad-300x300.png"
@@ -9,7 +9,7 @@ import sublime from '../../public/img/birthday/Sublime-Lime-300x300.webp'
 import IceCream from "../../public/img/cupcake/ice cream.jpeg"
 import BirthDay from "../../public/img/birthday/CC1153F7-B40C-4CB0-A654-746787BA408B-460x460.webp"
 import Cupcake from "../../public/img/cupcake/velvet.jpeg"
-import Pastries from "../../public/img/birthday/Cheery-Sunflower-300x300.webp"
+import NormalCakes from "../../public/img/birthday/Cheery-Sunflower-300x300.webp"
 import wedding from '../../public/img/birthday/35_621823e7-857a-4870-856d-4a29ab2da622_1024x1024@2x.webp'
 
 export default function HomePage() {
@@ -55,6 +55,11 @@ export default function HomePage() {
                 <Card className="overflow-hidden h-full transition-all duration-200 hover:shadow-md">
                   <div className="relative h-64 w-full">
                     <Image src={product.image || "/placeholder.svg"} alt={product.name} fill className="object-cover" />
+                    {product.badge && (
+                      <span className="absolute top-4 right-4 bg-pink-500 text-white text-sm font-semibold px-3 py-1 rounded-full">
+                        {product.badge}
+                      </span>
+                    )}
                   </div>
                   <CardContent className="p-4">
                     <div className="justify-center text-center mb-2">
@@ -141,6 +146,7 @@ const featuredProducts = [
     slug: "chocolate-truffle-cake",
     price: 420.99,
     image: superDad,
+    badge: "New",
   },
   {
     id: 2,
@@ -155,7 +161,7 @@ const featuredProducts = [
     slug: "red-velvet-delight",
     price: 440.99,
     image: sublime,
-    // badge: "New",
+    badge: "New",
   },
   {
     id: 4,
@@ -169,26 +175,26 @@ const featuredProducts = [
 const categories = [
   {
     id: 1,
+    name: "Normal Cakes",
+    slug: "Normal Cakes",
+    image: NormalCakes,
+  },
+  {
+    id: 2,
     name: "Birthday Cakes",
     slug: "birthday",
     image: BirthDay,
   },
   {
-    id: 2,
+    id: 3,
     name: "Wedding Cakes",
     slug: "wedding",
     image: wedding,
   },
   {
-    id: 3,
+    id: 4,
     name: "Cupcakes",
     slug: "cupcakes",
     image: Cupcake,
-  },
-  {
-    id: 4,
-    name: "Pastries",
-    slug: "pastries",
-    image: Pastries,
   },
 ]

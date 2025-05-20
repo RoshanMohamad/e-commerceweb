@@ -54,9 +54,9 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.image,
+      image: product.image?.src || "/placeholder.svg",
       quantity,
-    })
+});
 
     toast( `${quantity} × ${product.name} added to your cart`,
     )
@@ -71,7 +71,8 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
 
       <div className="grid md:grid-cols-2 gap-10">
         <div className="relative h-[400px] rounded-lg overflow-hidden">
-          <Image src={product.image || "/placeholder.svg"} alt={product.name} fill className="object-cover" priority />
+          <Image src={product.image || "/placeholder.svg"} alt={product.name} fill className="object-cover" priority
+          sizes="(max-width: 768px) 100vw,"/>
           {product.badge && (
             <span className="absolute top-4 right-4 bg-pink-500 text-white text-sm font-semibold px-3 py-1 rounded-full">
               {product.badge}
@@ -130,35 +131,31 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
 
 // Sample data
 const products = [
-  {
+   {
     id: 1,
     name: "Chocolate Truffle Cake",
     slug: "chocolate-truffle-cake",
-    description:
-      "Rich chocolate cake with smooth truffle frosting and chocolate ganache. Made with premium dark chocolate and fresh cream, this cake is perfect for chocolate lovers. Each bite delivers an intense chocolate flavor with a melt-in-your-mouth texture.",
-    price: 42.99,
+    description: "Rich chocolate cake with smooth truffle frosting and chocolate ganache.",
+    price: 420.99,
     image: superDad,
-    badge: "Bestseller",
     category: "birthday",
   },
   {
     id: 2,
     name: "Strawberry Shortcake",
     slug: "strawberry-shortcake",
-    description:
-      "Light vanilla sponge with fresh strawberries and whipped cream. This classic cake features layers of fluffy sponge cake, sweet strawberries, and light whipped cream frosting. It's a refreshing choice for spring and summer celebrations.",
-    price: 38.99,
-    image: Pastries,
+    description: "Light vanilla sponge with fresh strawberries and whipped cream.",
+    price: 380.99,
+    image: wedding,
     category: "birthday",
   },
   {
     id: 3,
     name: "Red Velvet Delight",
     slug: "red-velvet-delight",
-    description:
-      "Classic red velvet cake with cream cheese frosting and red velvet crumbs. Our red velvet cake has a subtle cocoa flavor with a beautiful red color. The tangy cream cheese frosting perfectly complements the soft, moist cake layers.",
-    price: 44.99,
-    image: Mud,
+    description: "Classic red velvet cake with cream cheese frosting and red velvet crumbs.",
+    price: 440.99,
+    image: Cupcake,
     badge: "New",
     category: "birthday",
   },
@@ -166,19 +163,17 @@ const products = [
     id: 4,
     name: "Lemon Blueberry Cake",
     slug: "lemon-blueberry-cake",
-    description:
-      "Tangy lemon cake with fresh blueberries and lemon buttercream. This bright, flavorful cake combines zesty lemon with sweet blueberries for a perfect balance. The light lemon buttercream adds just the right amount of sweetness.",
-    price: 39.99,
-    image: sublime,
+    description: "Tangy lemon cake with fresh blueberries and lemon buttercream.",
+    price: 390.99,
+    image: BirthDay,
     category: "birthday",
   },
   {
     id: 5,
     name: "Tiramisu Cake",
     slug: "tiramisu-cake",
-    description:
-      "Coffee-soaked layers with mascarpone cream and cocoa dusting. Inspired by the classic Italian dessert, this cake features coffee-infused sponge layers, creamy mascarpone filling, and a dusting of cocoa powder on top.",
-    price: 46.99,
+    description: "Coffee-soaked layers with mascarpone cream and cocoa dusting.",
+    price: 460.99,
     image: IceCream,
     category: "pastries",
   },
@@ -186,30 +181,27 @@ const products = [
     id: 6,
     name: "Black Forest Cake",
     slug: "black-forest-cake",
-    description:
-      "Chocolate sponge with cherries, whipped cream, and chocolate shavings. This traditional German cake combines rich chocolate sponge with tart cherries and light whipped cream. The chocolate shavings add an elegant finishing touch.",
-    price: 45.99,
-    image: BirthDay,
+    description: "Chocolate sponge with cherries, whipped cream, and chocolate shavings.",
+    price: 450.99,
+    image: Pastries,
     category: "birthday",
   },
   {
     id: 7,
     name: "Vanilla Buttercream Wedding Cake",
     slug: "vanilla-buttercream-wedding-cake",
-    description:
-      "Three-tier vanilla cake with smooth buttercream frosting and elegant decorations. This stunning wedding cake features premium Madagascar vanilla and a silky buttercream finish. It's designed to be the perfect centerpiece for your special day.",
+    description: "Three-tier vanilla cake with smooth buttercream frosting and elegant decorations.",
     price: 249.99,
-    image: wedding,
+    image: sublime,
     category: "wedding",
   },
   {
     id: 8,
     name: "Chocolate Cupcakes (6 pack)",
     slug: "chocolate-cupcakes",
-    description:
-      "Moist chocolate cupcakes with chocolate buttercream frosting. These delicious cupcakes are perfect for parties or as a sweet treat. Each cupcake is topped with a swirl of rich chocolate buttercream and chocolate sprinkles.",
-    price: 18.99,
-    image: Cupcake,
+    description: "Moist chocolate cupcakes with chocolate buttercream frosting.",
+    price: 180.99,
+    image: Mud,
     category: "cupcakes",
   },
 ]

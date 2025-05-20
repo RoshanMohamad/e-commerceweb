@@ -1,0 +1,15 @@
+{
+    "json.schemas": [
+        {
+            "fileMatch": [
+                "/myfile"
+            ],
+            "url": "schemaURL"
+        }
+    ],
+    "C_Cpp.autocompleteAddParentheses": true,
+    "github.copilot.nextEditSuggestions.enabled": true,
+    "github.copilot.enable": {
+        "plaintext": true
+    }
+}

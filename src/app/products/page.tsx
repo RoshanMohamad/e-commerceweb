@@ -1,14 +1,25 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Filter } from "lucide-react"
-import superDad from "../../../public/img/birthday/Super-dad-300x300.png"
-import Mud from "../../../public/img/cupcake/Chocolate_Mud_Cup_Cake_1024x1024@2x.webp"
-import sublime from '../../../public/img/birthday/Sublime-Lime-300x300.webp'
-import IceCream from "../../../public/img/cupcake/ice cream.jpeg"
-import BirthDay from "../../../public/img/birthday/CC1153F7-B40C-4CB0-A654-746787BA408B-460x460.webp"
-import Cupcake from "../../../public/img/cupcake/velvet.jpeg"
-import Pastries from "../../../public/img/birthday/Cheery-Sunflower-300x300.webp"
-import wedding from '../../../public/img/birthday/35_621823e7-857a-4870-856d-4a29ab2da622_1024x1024@2x.webp'
+import Image1 from "../../../public/img/birthday/Super-dad-300x300.png"
+import Image3 from '../../../public/img/birthday/Sublime-Lime-300x300.webp'
+import Image5 from "../../../public/img/birthday/CC1153F7-B40C-4CB0-A654-746787BA408B-460x460.webp"
+import Image7 from "../../../public/img/birthday/Cheery-Sunflower-300x300.webp"
+import Image8 from '../../../public/img/birthday/35_621823e7-857a-4870-856d-4a29ab2da622_1024x1024@2x.webp'
+import Image9 from "../../../public/img/birthday/20200121-_DSC9467_Original-1-300x300.webp"
+import Image11 from "../../../public/img/birthday/MSA_1941-1-300x300.webp"
+import Image12 from "../../../public/img/birthday/The-Crowd-Pleaser-300x300.webp"
+import Image13 from "../../../public/img/birthday/images (1).jpeg"
+import Image14 from "../../../public/img/cupcake/Chocolate_Mousse_Cup_1024x1024@2x.webp"
+import Image10 from "../../../public/img/cupcake/MSA_1773_Original-1-460x460.webp"
+import Image6 from "../../../public/img/cupcake/velvet.jpeg"
+import Image4 from "../../../public/img/cupcake/ice cream.jpeg"
+import Image2 from "../../../public/img/cupcake/Chocolate_Mud_Cup_Cake_1024x1024@2x.webp"
+import Image15 from "../../../public/img/cupcake/images.jpeg"
+import Image16 from "../../../public/img/cupcake/fudge.webp"
+import Image17 from "../../../public/img/cupcake/TCF-12th-oct01093_Original-1-1-768x768.webp"
+
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import {
@@ -45,7 +56,7 @@ export default function ProductsPage() {
                 <DropdownMenuRadioItem value="birthday">Birthday Cakes</DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="wedding">Wedding Cakes</DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="cupcakes">Cupcakes</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="pastries">Pastries</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="pastries">Normal Cakes</DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -99,7 +110,7 @@ const products = [
     slug: "chocolate-truffle-cake",
     description: "Rich chocolate cake with smooth truffle frosting and chocolate ganache.",
     price: 420.99,
-    image: superDad,
+    image: Image1,
     category: "birthday",
   },
   {
@@ -108,7 +119,7 @@ const products = [
     slug: "strawberry-shortcake",
     description: "Light vanilla sponge with fresh strawberries and whipped cream.",
     price: 380.99,
-    image: wedding,
+    image: Image2,
     category: "birthday",
   },
   {
@@ -117,7 +128,7 @@ const products = [
     slug: "red-velvet-delight",
     description: "Classic red velvet cake with cream cheese frosting and red velvet crumbs.",
     price: 440.99,
-    image: Cupcake,
+    image: Image3,
     badge: "New",
     category: "birthday",
   },
@@ -127,7 +138,7 @@ const products = [
     slug: "lemon-blueberry-cake",
     description: "Tangy lemon cake with fresh blueberries and lemon buttercream.",
     price: 390.99,
-    image: BirthDay,
+    image: Image4,
     category: "birthday",
   },
   {
@@ -136,8 +147,8 @@ const products = [
     slug: "tiramisu-cake",
     description: "Coffee-soaked layers with mascarpone cream and cocoa dusting.",
     price: 460.99,
-    image: IceCream,
-    category: "pastries",
+    image: Image5,
+    category: "Normal Cakes",
   },
   {
     id: 6,
@@ -145,7 +156,7 @@ const products = [
     slug: "black-forest-cake",
     description: "Chocolate sponge with cherries, whipped cream, and chocolate shavings.",
     price: 450.99,
-    image: Pastries,
+    image: Image6,
     category: "birthday",
   },
   {
@@ -154,7 +165,7 @@ const products = [
     slug: "vanilla-buttercream-wedding-cake",
     description: "Three-tier vanilla cake with smooth buttercream frosting and elegant decorations.",
     price: 249.99,
-    image: sublime,
+    image:Image7,
     category: "wedding",
   },
   {
@@ -163,8 +174,89 @@ const products = [
     slug: "chocolate-cupcakes",
     description: "Moist chocolate cupcakes with chocolate buttercream frosting.",
     price: 180.99,
-    image: Mud,
+    image: Image8,
     category: "cupcakes",
   },
+ {
+    id: 9,
+    name: "Chocolate Cupcakes (6 pack)",
+    slug: "chocolate-cupcakes",
+    description: "Moist chocolate cupcakes with chocolate buttercream frosting.",
+    price: 180.99,
+    image: Image9,
+    category: "cupcakes",
+  },
+ {
+    id: 10,
+    name: "Chocolate Cupcakes (6 pack)",
+    slug: "chocolate-cupcakes",
+    description: "Moist chocolate cupcakes with chocolate buttercream frosting.",
+    price: 180.99,
+    image: Image10,
+    category: "cupcakes",
+  },
+ {
+    id: 11,
+    name: "Chocolate Cupcakes (6 pack)",
+    slug: "chocolate-cupcakes",
+    description: "Moist chocolate cupcakes with chocolate buttercream frosting.",
+    price: 180.99,
+    image: Image11,
+    category: "cupcakes",
+  },
+ {
+    id: 12,
+    name: "Chocolate Cupcakes (6 pack)",
+    slug: "chocolate-cupcakes",
+    description: "Moist chocolate cupcakes with chocolate buttercream frosting.",
+    price: 180.99,
+    image: Image12,
+    category: "cupcakes",
+  },
+ {
+    id: 13,
+    name: "Chocolate Cupcakes (6 pack)",
+    slug: "chocolate-cupcakes",
+    description: "Moist chocolate cupcakes with chocolate buttercream frosting.",
+    price: 180.99,
+    image: Image13,
+    category: "cupcakes",
+  },
+  {
+    id: 14,
+    name: "Chocolate Cupcakes (6 pack)",
+    slug : "chocolate-cupcakes",
+    description: "",
+    price : 180.99,
+    image : Image14,
+    category : "cupcakes",
+  },
+  {
+    id: 15,
+    name : "Chocolate Cupcakes (6 pack)",
+    slug : "chocolate-cupcakes",
+    description : "",
+    price : 180.99,
+    image : Image15,
+    category : "cupcakes",
+  },
+  {
+    id: 16,
+    name : "Chocolate Cupcakes (6 pack)",
+    slug : "chocolate-cupcakes",
+    description : "",
+    price : 180.99,
+    image : Image16,
+    category : "cupcakes",
+  },
+  {
+    id : 17,
+    name : "Chocolate Cupcakes (6 pack)",
+    slug : "chocolate-cupcakes",
+    description : "",
+    price : 180.99,
+    image : Image17,
+    category : "cupcakes",
+  }
 
 ]

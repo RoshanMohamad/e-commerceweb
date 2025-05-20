@@ -4,4 +4,7 @@ export interface Task {
   description?: string;
   dueDate: string; // ISO string format
   completed: boolean;
+  createAt: string; // ISO string format
+  updateAt: string; // ISO string format
+
 }
