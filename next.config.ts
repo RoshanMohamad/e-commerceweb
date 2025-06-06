@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  basePath: '/e-commerceweb', // e.g., '/myapp'
+  // ... other configs
 };
 
 export default nextConfig;

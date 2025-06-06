@@ -43,9 +43,9 @@ export default function CartPage() {
               <div className="flex-1">
                 <div className="flex justify-between">
                   <h3 className="font-semibold text-lg">{item.name}</h3>
-                  <p className="font-bold text-pink-600">${(item.price * item.quantity).toFixed(2)}</p>
+                  <p className="font-bold text-pink-600">Rs.{(item.price * item.quantity).toFixed(2)}</p>
                 </div>
-                <p className="text-gray-600 text-sm mt-1">${item.price.toFixed(2)} each</p>
+                <p className="text-gray-600 text-sm mt-1">Rs.{item.price.toFixed(2)} each</p>
 
                 <div className="flex items-center justify-between mt-4">
                   <div className="flex items-center border rounded-md">
@@ -90,16 +90,16 @@ export default function CartPage() {
           <div className="space-y-3 mb-4">
             <div className="flex justify-between">
               <span className="text-gray-600">Subtotal</span>
-              <span>${subtotal.toFixed(2)}</span>
+              <span>Rs.{subtotal.toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Shipping</span>
-              <span>${shipping.toFixed(2)}</span>
+              <span>Rs.{shipping.toFixed(2)}</span>
             </div>
             <Separator />
             <div className="flex justify-between font-bold">
               <span>Total</span>
-              <span>${total.toFixed(2)}</span>
+              <span>Rs.{total.toFixed(2)}</span>
             </div>
           </div>
 

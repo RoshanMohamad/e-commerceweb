@@ -11,6 +11,7 @@ import BirthDay from "../../public/img/birthday/CC1153F7-B40C-4CB0-A654-746787BA
 import Cupcake from "../../public/img/cupcake/velvet.jpeg"
 import NormalCakes from "../../public/img/birthday/Cheery-Sunflower-300x300.webp"
 import wedding from '../../public/img/birthday/35_621823e7-857a-4870-856d-4a29ab2da622_1024x1024@2x.webp'
+import Cover from '../../public/Untitled design.png'
 
 export default function HomePage() {
   return (
@@ -19,7 +20,7 @@ export default function HomePage() {
       <section className="relative w-full h-[500px]">
         <div className="absolute inset-0 bg-gradient-to-r from-pink-500/20 to-yellow-500/20" />
         <Image
-          src="/placeholder.svg?height=600&width=1200"
+          src={Cover}
           alt="Delicious cakes and pastries"
           fill
           className="object-cover"

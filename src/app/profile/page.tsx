@@ -1,92 +1,177 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // Import useEffect
 import Head from 'next/head';
 import Image from 'next/image';
-import my from "../../../public/next.svg"
+import my from "../../../public/next.svg";
+import { account } from '@/lib/appwrite'; // Import your Appwrite account service
+import { AppwriteException } from 'appwrite'; // Import AppwriteException for type checking
+import { useRouter } from 'next/navigation'; // Import useRouter for redirection
+import Image2 from "../../../public/img/birthday/Cheery-Sunflower-300x300.webp"
+
+// Define a more accurate User type based on Appwrite's Account object
+type User = {
+  $id: string;
+  name: string;
+  email: string;
+  phone?: string; // Appwrite's Account object might not directly provide a 'phone' field by default
+  dob?: string;
+  gender?: string;
+  membership?: string;
+  avatar?: string;
+  // Add other properties you fetch from Appwrite or derive
+  addresses: Address[];
+  paymentMethods: PaymentMethod[];
+  orders: Order[];
+  notifications: {
+    email: boolean;
+    push: boolean;
+  };
+  twoFactorEnabled: boolean;
+};
+
+type Address = {
+  id: number;
+  name: string;
+  street: string;
+  city: string;
+  state: string;
+  zip: string;
+  country: string;
+  phone: string;
+  isDefault: boolean;
+};
+
+type PaymentMethod = {
+  id: number;
+  type: string;
+  last4: string;
+  expiry: string;
+};
+
+type Order = {
+  id: string;
+  date: string;
+  total: number;
+  status: string;
+  items: number;
+};
 
 export default function ProfilePage() {
-  const [user, setUser] = useState({
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    phone: '+1 (555) 123-4567',
-    dob: '1990-01-15',
-    gender: 'Male',
-    membership: 'Gold Member',
-    avatar: '/default-avatar.jpg',
-    addresses: [
-      {
-        id: 1,
-        name: 'Home',
-        street: '123 Main St',
-        city: 'New York',
-        state: 'NY',
-        zip: '10001',
-        country: 'United States',
-        phone: '+1 (555) 123-4567',
-        isDefault: true
-      },
-      {
-        id: 2,
-        name: 'Work',
-        street: '456 Business Ave',
-        city: 'New York',
-        state: 'NY',
-        zip: '10002',
-        country: 'United States',
-        phone: '+1 (555) 987-6543',
-        isDefault: false
-      }
-    ],
-    paymentMethods: [
-      {
-        id: 1,
-        type: 'Visa',
-        last4: '4242',
-        expiry: '12/25'
-      }
-    ],
-    orders: [
-      {
-        id: 'ORD-12345',
-        date: '2023-05-15',
-        total: 129.99,
-        status: 'Delivered',
-        items: 3
-      },
-      {
-        id: 'ORD-12344',
-        date: '2023-05-10',
-        total: 59.99,
-        status: 'Shipped',
-        items: 2
-      },
-      
-    ],
-    notifications: {
-      email: true,
-      push: true
-    },
-    twoFactorEnabled: false
-  });
+  const router = useRouter(); // Initialize router
+
+  const [user, setUser] = useState<User | null>(null); // Initialize user as null
+  const [loading, setLoading] = useState(true); // Track loading state
+  const [error, setError] = useState<string | null>(null); // Track error state
 
   const [activeTab, setActiveTab] = useState('personal');
   const [isEditing, setIsEditing] = useState(false);
 
-  const handleInputChange = (e : React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const loggedInUser = await account.get(); // Attempt to get the current user
+        console.log('Fetched user:', loggedInUser); // Log the fetched user to inspect its structure
+
+        // Map Appwrite user data to your local `User` type
+        setUser({
+          $id: loggedInUser.$id,
+          name: loggedInUser.name,
+          email: loggedInUser.email,
+          phone: loggedInUser.phone || '', // Appwrite's account object might not have 'phone' directly. You might need to add it to your Appwrite User attributes.
+          dob: loggedInUser.prefs?.dob || '', // Example: assuming dob is in user preferences
+          gender: loggedInUser.prefs?.gender || '', // Example: assuming gender is in user preferences
+          membership: 'Standard Member', // Default or fetch from custom attributes if applicable
+          avatar: my.src, // Use your imported image, or fetch a user-specific avatar URL
+          
+          // These arrays (addresses, payments, orders) are NOT part of Appwrite's default Account object.
+          // You'll need to fetch these from Appwrite's Databases service
+          // or from custom functions/collections if you want them dynamic.
+          // For now, they remain static as in your original code,
+          // or you can set them to empty arrays if they should only come from DB.
+          addresses: [
+            { id: 1, name: 'Home', street: '123 Main St', city: 'New York', state: 'NY', zip: '10001', country: 'United States', phone: '+1 (555) 123-4567', isDefault: true },
+            { id: 2, name: 'Work', street: '456 Business Ave', city: 'New York', state: 'NY', zip: '10002', country: 'United States', phone: '+1 (555) 987-6543', isDefault: false }
+          ],
+          paymentMethods: [
+            { id: 1, type: 'Visa', last4: '4242', expiry: '12/25' }
+          ],
+          orders: [
+            { id: 'ORD-12345', date: '2023-05-15', total: 129.99, status: 'Delivered', items: 3 },
+            { id: 'ORD-12344', date: '2023-05-10', total: 59.99, status: 'Shipped', items: 2 }
+          ],
+          notifications: {
+            email: loggedInUser.prefs?.emailNotifications ?? true, // Example: assuming notifications are in user preferences
+            push: loggedInUser.prefs?.pushNotifications ?? true
+          },
+          twoFactorEnabled: loggedInUser.mfa || false, // Assuming mfa property directly
+        });
+      } catch (err) {
+        console.error('Failed to fetch user:', err);
+        setError('Failed to load user data. Please ensure you are logged in.');
+
+        if (err instanceof AppwriteException && err.code === 401) {
+          // If the user is not authenticated (401 Unauthorized), redirect to login
+          router.push('/login'); // Assuming you have a login page at /login
+        } else {
+          // Handle other errors if necessary
+          setUser(null); // Clear user data on error
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [router]); // Depend on router to avoid lint warnings, though it rarely changes
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setUser(prev => ({ ...prev, [name]: value }));
+    setUser(prev => prev ? { ...prev, [name]: value } : null); // Ensure prev is not null
   };
 
-  const setDefaultAddress = (id : number) => {
-    setUser(prev => ({
+  const setDefaultAddress = (id: number) => {
+    setUser(prev => prev ? ({
       ...prev,
       addresses: prev.addresses.map(addr => ({
         ...addr,
         isDefault: addr.id === id
       }))
-    }));
+    }) : null);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <p className="text-gray-700">Loading profile data...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <p className="text-red-600">{error}</p>
+        <button 
+          onClick={() => router.push('/login')} 
+          className="ml-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+        >
+          Go to Login
+        </button>
+      </div>
+    );
+  }
+
+  if (!user) {
+    // This case should ideally be covered by the error/redirect, but good for safety
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <p className="text-gray-700">No user data available.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -101,10 +186,12 @@ export default function ProfilePage() {
           <div className="bg-gradient-to-r from-pink-500/20 to-yellow-500/20 px-6 py-8 text-black">
             <div className="flex items-center space-x-4">
               <div className="relative">
-                <Image 
+                <Image
                   className="w-20 h-20 rounded-full border-2 border-black"
-                  src={my}
+                  src={Image2} // Use user.avatar if available, otherwise fallback to default
                   alt="User avatar"
+                  width={80} // Add width and height for Next.js Image component
+                  height={80}
                 />
                 <button className="absolute bottom-0 right-0 bg-white rounded-full p-1 shadow">
                   <svg className="h-5 w-5 text-black" fill="currentColor" viewBox="0 0 20 20">
@@ -165,7 +252,7 @@ export default function ProfilePage() {
               <div>
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-lg font-medium text-gray-900">Personal Information</h2>
-                  <button 
+                  <button
                     onClick={() => setIsEditing(!isEditing)}
                     className="text-indigo-600 hover:text-indigo-900 font-medium"
                   >
@@ -192,6 +279,7 @@ export default function ProfilePage() {
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Email</label>
                     <p className="mt-1 text-sm text-gray-900">{user.email}</p>
+                    {/* You might want to fetch email verification status from Appwrite later */}
                     <p className="mt-1 text-xs text-green-600">Verified</p>
                   </div>
 
@@ -201,12 +289,12 @@ export default function ProfilePage() {
                       <input
                         type="tel"
                         name="phone"
-                        value={user.phone}
+                        value={user.phone || ''} // Handle potential undefined phone
                         onChange={handleInputChange}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
                     ) : (
-                      <p className="mt-1 text-sm text-gray-900">{user.phone}</p>
+                      <p className="mt-1 text-sm text-gray-900">{user.phone || 'N/A'}</p>
                     )}
                   </div>
 
@@ -217,12 +305,12 @@ export default function ProfilePage() {
                         <input
                           type="date"
                           name="dob"
-                          value={user.dob}
+                          value={user.dob || ''}
                           onChange={handleInputChange}
                           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         />
                       ) : (
-                        <p className="mt-1 text-sm text-gray-900">{user.dob}</p>
+                        <p className="mt-1 text-sm text-gray-900">{user.dob || 'N/A'}</p>
                       )}
                     </div>
                     <div>
@@ -230,7 +318,8 @@ export default function ProfilePage() {
                       {isEditing ? (
                         <select
                           name="gender"
-                          value={user.gender}
+                          value={user.gender || ''}
+                          // onChange={(e) => handleInputChange(e React.ChangeEvent<HTMLInputElement>)} // Cast to HTMLInputElement
                           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         >
                           <option>Male</option>
@@ -239,7 +328,7 @@ export default function ProfilePage() {
                           <option>Prefer not to say</option>
                         </select>
                       ) : (
-                        <p className="mt-1 text-sm text-gray-900">{user.gender}</p>
+                        <p className="mt-1 text-sm text-gray-900">{user.gender || 'N/A'}</p>
                       )}
                     </div>
                   </div>
@@ -255,7 +344,11 @@ export default function ProfilePage() {
                       </button>
                       <button
                         type="button"
-                        onClick={() => setIsEditing(false)}
+                        onClick={() => {
+                          // TODO: Implement saving user data to Appwrite here
+                          console.log('Saving user data:', user);
+                          setIsEditing(false);
+                        }}
                         className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       >
                         Save
@@ -266,7 +359,7 @@ export default function ProfilePage() {
               </div>
             )}
 
-            {/* Addresses Tab */}
+            {/* Addresses Tab - These will remain static unless you fetch from Appwrite Databases */}
             {activeTab === 'addresses' && (
               <div>
                 <div className="flex justify-between items-center mb-6">
@@ -297,7 +390,7 @@ export default function ProfilePage() {
                         </button>
                         {!address.isDefault && (
                           <>
-                            <button 
+                            <button
                               onClick={() => setDefaultAddress(address.id)}
                               className="text-indigo-600 hover:text-indigo-900 text-sm font-medium"
                             >
@@ -315,11 +408,11 @@ export default function ProfilePage() {
               </div>
             )}
 
-            {/* Orders Tab */}
+            {/* Orders Tab - These will remain static unless you fetch from Appwrite Databases */}
             {activeTab === 'orders' && (
               <div>
                 <h2 className="text-lg font-medium text-gray-900 mb-6">Order History</h2>
-                
+
                 <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg">
                   <table className="min-w-full divide-y divide-gray-300">
                     <thead className="bg-gray-50">
@@ -390,7 +483,7 @@ export default function ProfilePage() {
               </div>
             )}
 
-            {/* Payments Tab */}
+            {/* Payments Tab - These will remain static unless you fetch from Appwrite Databases */}
             {activeTab === 'payments' && (
               <div>
                 <div className="flex justify-between items-center mb-6">
@@ -452,7 +545,7 @@ export default function ProfilePage() {
                           </p>
                         </div>
                         <button
-                          onClick={() => setUser(prev => ({ ...prev, twoFactorEnabled: !prev.twoFactorEnabled }))}
+                          onClick={() => setUser(prev => prev ? ({ ...prev, twoFactorEnabled: !prev.twoFactorEnabled }) : null)}
                           className={`relative inline-flex h-6 w-11 items-center rounded-full ${user.twoFactorEnabled ? 'bg-indigo-600' : 'bg-gray-200'}`}
                         >
                           <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${user.twoFactorEnabled ? 'translate-x-6' : 'translate-x-1'}`} />
@@ -470,7 +563,7 @@ export default function ProfilePage() {
                           <p className="text-sm text-gray-500">Order updates, promotions, etc.</p>
                         </div>
                         <button
-                          onClick={() => setUser(prev => ({ ...prev, notifications: { ...prev.notifications, email: !prev.notifications.email } }))}
+                          onClick={() => setUser(prev => prev ? ({ ...prev, notifications: { ...prev.notifications, email: !prev.notifications.email } }) : null)}
                           className={`relative inline-flex h-6 w-11 items-center rounded-full ${user.notifications.email ? 'bg-indigo-600' : 'bg-gray-200'}`}
                         >
                           <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${user.notifications.email ? 'translate-x-6' : 'translate-x-1'}`} />
@@ -482,7 +575,7 @@ export default function ProfilePage() {
                           <p className="text-sm text-gray-500">Order updates on your device</p>
                         </div>
                         <button
-                          onClick={() => setUser(prev => ({ ...prev, notifications: { ...prev.notifications, push: !prev.notifications.push } }))}
+                          onClick={() => setUser(prev => prev ? ({ ...prev, notifications: { ...prev.notifications, push: !prev.notifications.push } }) : null)}
                           className={`relative inline-flex h-6 w-11 items-center rounded-full ${user.notifications.push ? 'bg-indigo-600' : 'bg-gray-200'}`}
                         >
                           <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${user.notifications.push ? 'translate-x-6' : 'translate-x-1'}`} />

@@ -191,7 +191,7 @@ export default function CheckoutPage() {
                       <p className="text-sm font-medium truncate">{item.name}</p>
                       <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
                     </div>
-                    <p className="text-sm font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+                    <p className="text-sm font-medium">Rs.{(item.price * item.quantity).toFixed(2)}</p>
                   </div>
                 ))}
               </div>
@@ -202,20 +202,20 @@ export default function CheckoutPage() {
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>Rs.{subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span>Shipping</span>
-                  <span>${shipping.toFixed(2)}</span>
+                  <span>Rs.{shipping.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span>Tax (8%)</span>
-                  <span>${tax.toFixed(2)}</span>
+                  <span>Rs.{tax.toFixed(2)}</span>
                 </div>
                 <Separator />
                 <div className="flex justify-between font-bold">
                   <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>Rs.{total.toFixed(2)}</span>
                 </div>
               </div>
 
@@ -232,7 +232,7 @@ export default function CheckoutPage() {
                     </>
                   ) : (
                     <>
-                      <CreditCard className="mr-2 h-4 w-4" /> Pay ${total.toFixed(2)}
+                      <CreditCard className="mr-2 h-4 w-4" /> Pay Rs.{total.toFixed(2)}
                     </>
                   )}
                 </Button>
