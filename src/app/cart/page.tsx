@@ -3,7 +3,6 @@
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react"
-
 import { Button } from "@/components/ui/button"
 import { useCart } from "@/components/cart-provider"
 import { Separator } from "@/components/ui/separator"

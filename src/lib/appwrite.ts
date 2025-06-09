@@ -11,4 +11,4 @@ const client = new Client()
 
 export const account = new Account(client);
 export const databases = new Databases(client);
-export { ID, Query, type Models };
+export { ID, Query, type Models,client };

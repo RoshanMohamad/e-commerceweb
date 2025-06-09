@@ -92,8 +92,8 @@ export default function ProfilePage() {
           // For now, they remain static as in your original code,
           // or you can set them to empty arrays if they should only come from DB.
           addresses: [
-            { id: 1, name: 'Home', street: '123 Main St', city: 'New York', state: 'NY', zip: '10001', country: 'United States', phone: '+1 (555) 123-4567', isDefault: true },
-            { id: 2, name: 'Work', street: '456 Business Ave', city: 'New York', state: 'NY', zip: '10002', country: 'United States', phone: '+1 (555) 987-6543', isDefault: false }
+            { id: 1, name: 'Home', street: '239', city: 'Galagamuwa', state: 'Kurunegala', zip: '10001', country: 'Sri lanka', phone: '+94 (766) 599-832', isDefault: true },
+            { id: 2, name: 'University', street: 'Molpe', city: 'Moratuwa', state: 'Colombo', zip: '10002', country: 'Sri lanka', phone: '', isDefault: false }
           ],
           paymentMethods: [
             { id: 1, type: 'Visa', last4: '4242', expiry: '12/25' }
@@ -450,7 +450,7 @@ export default function ProfilePage() {
                             {order.items}
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                            ${order.total.toFixed(2)}
+                            Rs.{order.total.toFixed(2)}
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm">
                             <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
