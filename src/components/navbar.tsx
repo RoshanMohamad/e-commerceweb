@@ -2,14 +2,42 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { ListTodo, Menu, X } from "lucide-react"
-import { useState } from "react"
+import { Menu, X, Cake } from "lucide-react"
+import { useState, useRef } from "react"
 import { useAuth } from "@/lib/auth"
+import gsap from "gsap"
+import { useGSAP } from "@gsap/react"
 
 export function Navbar() {
   const pathname = usePathname()
   const { user, signOut } = useAuth()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const logoRef = useRef<HTMLAnchorElement>(null)
+
+  useGSAP(() => {
+    gsap.from(logoRef.current, {
+      y: -20,
+      opacity: 0,
+      duration: 0.5,
+      ease: "back.out(1.7)"
+    })
+  })
+
+  const handleLogoHover = () => {
+    gsap.to(logoRef.current, {
+      scale: 1.1,
+      duration: 0.2,
+      ease: "power1.out"
+    })
+  }
+
+  const handleLogoLeave = () => {
+    gsap.to(logoRef.current, {
+      scale: 1,
+      duration: 0.2,
+      ease: "power1.out"
+    })
+  }
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
@@ -27,9 +55,16 @@ export function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
-          <Link href="/" className="flex items-center gap-2" onClick={closeMenu}>
-            <ListTodo className="h-6 w-6" />
-            <span className="text-lg font-semibold">TaskMaster</span>
+          <Link 
+            href="/" 
+            className="flex items-center gap-2" 
+            onClick={closeMenu}
+            ref={logoRef}
+            onMouseEnter={handleLogoHover}
+            onMouseLeave={handleLogoLeave}
+          >
+            <Cake className="h-6 w-6 text-pink-500" />
+            <span className="text-lg font-semibold">Sweet Delights</span>
           </Link>
         </div>
 

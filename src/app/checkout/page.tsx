@@ -41,16 +41,17 @@ export default function CheckoutPage() {
     )
   }
 
-  interface PaymentDetails {
-    cardNumber: string;
-    expiry: string;
-    cvc: string;
-    name?: string;
-    // Add other necessary fields
-  }
-  
-
- const handlePaymentSubmit = async (paymentDetails: PaymentDetails) => {
+  const handlePaymentSubmit = async (paymentDetails: {
+    cardNumber?: string;
+    cardName?: string;
+    expiryMonth?: string;
+    expiryYear?: string;
+    cvv?: string;
+    accountNumber?: string;
+    routingNumber?: string;
+    bankName?: string;
+    walletEmail?: string;
+  }) => {
   setIsProcessing(true);
 
   try {
@@ -67,9 +68,9 @@ export default function CheckoutPage() {
       amount: total,
       paymentMethod: selectedPaymentMethod,
       paymentDetails: {
-        cardNumber: paymentDetails.cardNumber,
-        expiry: paymentDetails.expiry,
-        cvc: paymentDetails.cvc
+        cardNumber: paymentDetails.cardNumber || "",
+        expiry: `${paymentDetails.expiryMonth}/${paymentDetails.expiryYear}`,
+        cvc: paymentDetails.cvv || ""
       },
       items: paymentItems
     });

@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  basePath: '/e-commerceweb',
+  // basePath: '/e-commerceweb',
  images: {
     remotePatterns: [
       {

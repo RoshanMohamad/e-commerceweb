@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, use, useEffect } from "react"
+import { useState, use, useEffect, useRef } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, Minus, Plus, ShoppingCart } from "lucide-react"
@@ -9,20 +9,27 @@ import { Product } from "@/types/database"
 import { Button } from "@/components/ui/button"
 import { useCart } from "@/components/cart-provider"
 import { toast } from "sonner"
+import gsap from "gsap"
+import { useGSAP } from "@gsap/react"
 
 // Fetches a single product by slug from Supabase
 async function getProductBySlugFromDB(slug: string): Promise<Product | null> {
-  const { data, error } = await supabase
-    .from('products') // Ensure 'products' is your table name in Supabase
-    .select('*')
-    .eq('slug', slug)
-    .single() // Expects a single row, returns an error if 0 or more than 1 found
+  try {
+    const { data, error } = await supabase
+      .from('products') // Ensure 'products' is your table name in Supabase
+      .select('*')
+      .eq('slug', slug)
+      .single() // Expects a single row, returns an error if 0 or more than 1 found
 
-  if (error) {
-    console.error('Error fetching product by slug:', error.message)
+    if (error) {
+      console.error('Error fetching product by slug:', error.message)
+      return null
+    }
+    return data as Product | null
+  } catch (error) {
+    console.error('Unexpected error fetching product:', error)
     return null
   }
-  return data as Product | null
 }
 
 export default function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -30,6 +37,10 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
   const [product, setProduct] = useState<Product | null | undefined>(undefined) // undefined for loading state
   const [quantity, setQuantity] = useState(1)
   const { addToCart } = useCart()
+  
+  const containerRef = useRef<HTMLDivElement>(null)
+  const imageRef = useRef<HTMLDivElement>(null)
+  const detailsRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (slug) {
@@ -40,10 +51,29 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
     }
   }, [slug])
 
+  useGSAP(() => {
+    if (product && containerRef.current) {
+      const tl = gsap.timeline()
+      
+      tl.from(imageRef.current, {
+        x: -50,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power2.out"
+      })
+      .from(detailsRef.current, {
+        x: 50,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power2.out"
+      }, "-=0.6")
+    }
+  }, [product])
+
   if (product === undefined) { // Loading state
     return (
       <div className="px-10 py-20 text-center">
-        <h1 className="text-2xl font-bold">Loading product...</h1>
+        <h1 className="text-2xl font-bold animate-pulse">Loading product...</h1>
         {/* You could add a spinner component here */}
       </div>
     );
@@ -85,19 +115,19 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
   }
 
   return (
-    <div className="px-10 py-10">
-      <Link href="/products" className="flex items-center text-sm mb-8 hover:text-pink-600">
+    <div ref={containerRef} className="px-10 py-10">
+      <Link href="/products" className="flex items-center text-sm mb-8 hover:text-pink-600 transition-colors">
         <ArrowLeft className="mr-2 h-4 w-4" />
         Back to Products
       </Link>
 
       <div className="grid md:grid-cols-2 gap-10">
-        <div className="relative h-[400px] rounded-lg overflow-hidden">
+        <div ref={imageRef} className="relative h-[400px] rounded-lg overflow-hidden shadow-lg">
           <Image
             src={product.image_url || "/placeholder.svg"} // Use image_url from Supabase
             alt={product.name}
             fill
-            className="object-cover"
+            className="object-cover hover:scale-105 transition-transform duration-500"
             priority
           sizes="(max-width: 768px) 100vw,"/>
           {product.badge && (
@@ -107,7 +137,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
           )}
         </div>
 
-        <div>
+        <div ref={detailsRef}>
           <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
           <p className="text-2xl font-bold text-pink-600 mb-4">Rs.{product.price.toFixed(2)}</p>
 
@@ -147,7 +177,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
               </div>
             </div>
 
-            <Button onClick={handleAddToCart} className="w-full md:w-auto" size="lg">
+            <Button onClick={handleAddToCart} className="w-full md:w-auto hover:scale-105 transition-transform" size="lg">
               <ShoppingCart className="mr-2 h-5 w-5" />
               Add to Cart
             </Button>

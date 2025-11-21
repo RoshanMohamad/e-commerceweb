@@ -1,8 +1,15 @@
+"use client"
+
+import { useRef } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import gsap from "gsap"
+import { useGSAP } from "@gsap/react"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
+
 import superDad from "../../public/img/birthday/Super-dad-300x300.png"
 import Mud from "../../public/img/cupcake/Chocolate_Mud_Cup_Cake_1024x1024@2x.webp"
 import sublime from '../../public/img/birthday/Sublime-Lime-300x300.webp'
@@ -14,10 +21,86 @@ import wedding from '../../public/img/birthday/35_621823e7-857a-4870-856d-4a29ab
 import Cover from '../../public/Untitled design.png'
 
 export default function HomePage() {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const heroRef = useRef<HTMLDivElement>(null)
+  const productsRef = useRef<HTMLDivElement>(null)
+  const categoriesRef = useRef<HTMLDivElement>(null)
+  const aboutRef = useRef<HTMLDivElement>(null)
+
+  useGSAP(() => {
+    gsap.registerPlugin(ScrollTrigger)
+
+    // Hero Animation
+    const tl = gsap.timeline()
+    tl.from(heroRef.current, {
+      opacity: 0,
+      duration: 1,
+      ease: "power2.out"
+    })
+    .from(".hero-text", {
+      y: 50,
+      opacity: 0,
+      duration: 0.8,
+      stagger: 0.2,
+      ease: "back.out(1.7)"
+    }, "-=0.5")
+
+    // Products Animation
+    gsap.from(".product-card", {
+      scrollTrigger: {
+        trigger: productsRef.current,
+        start: "top 80%",
+      },
+      y: 50,
+      opacity: 0,
+      duration: 0.6,
+      stagger: 0.1,
+      ease: "power2.out"
+    })
+
+    // Categories Animation
+    gsap.from(".category-card", {
+      scrollTrigger: {
+        trigger: categoriesRef.current,
+        start: "top 80%",
+      },
+      scale: 0.8,
+      opacity: 0,
+      duration: 0.6,
+      stagger: 0.1,
+      ease: "back.out(1.2)"
+    })
+
+    // About Animation
+    gsap.from(".about-content", {
+      scrollTrigger: {
+        trigger: aboutRef.current,
+        start: "top 70%",
+      },
+      x: -50,
+      opacity: 0,
+      duration: 0.8,
+      ease: "power2.out"
+    })
+    
+    gsap.from(".about-map", {
+      scrollTrigger: {
+        trigger: aboutRef.current,
+        start: "top 70%",
+      },
+      x: 50,
+      opacity: 0,
+      duration: 0.8,
+      ease: "power2.out",
+      delay: 0.2
+    })
+
+  }, { scope: containerRef })
+
   return (
-    <div className="flex flex-col min-h-screen">
+    <div ref={containerRef} className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="relative w-full h-[500px]">
+      <section ref={heroRef} className="relative w-full h-[500px] overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-pink-500/20 to-yellow-500/20" />
         <Image
           src={Cover}
@@ -27,20 +110,22 @@ export default function HomePage() {
           priority
         />
         <div className="relative flex flex-col items-center justify-center h-full text-center px-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-md mb-4">Sweet Delights Bakery</h1>
-          <p className="text-lg md:text-xl text-white drop-shadow-md max-w-2xl mb-8">
+          <h1 className="hero-text text-4xl md:text-5xl font-bold text-white drop-shadow-md mb-4">Sweet Delights Bakery</h1>
+          <p className="hero-text text-lg md:text-xl text-white drop-shadow-md max-w-2xl mb-8">
             Handcrafted cakes made with love for every occasion
           </p>
-          <Button size="lg" asChild>
-            <Link href="/products">
-              Shop Now <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
+          <div className="hero-text">
+            <Button size="lg" asChild className="hover:scale-105 transition-transform">
+              <Link href="/products">
+                Shop Now <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
         </div>
       </section>
 
       {/* Featured Products */}
-      <section className="py-16 px-4">
+      <section ref={productsRef} className="py-16 px-4">
         <div className="container mx-auto">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-3xl font-bold">Our Bestsellers</h2>
@@ -52,10 +137,15 @@ export default function HomePage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {featuredProducts.map((product) => (
-              <Link key={product.id} href={`/products/${product.slug}`}>
-                <Card className="overflow-hidden h-full transition-all duration-200 hover:shadow-md">
-                  <div className="relative h-64 w-full">
-                    <Image src={product.image || "/placeholder.svg"} alt={product.name} fill className="object-cover" />
+              <Link key={product.id} href={`/products/${product.slug}`} className="product-card block h-full">
+                <Card className="overflow-hidden h-full transition-all duration-200 hover:shadow-lg hover:-translate-y-1">
+                  <div className="relative h-64 w-full overflow-hidden">
+                    <Image 
+                      src={product.image || "/placeholder.svg"} 
+                      alt={product.name} 
+                      fill 
+                      className="object-cover transition-transform duration-500 hover:scale-110" 
+                    />
                     {product.badge && (
                       <span className="absolute top-4 right-4 bg-pink-500 text-white text-sm font-semibold px-3 py-1 rounded-full">
                         {product.badge}
@@ -76,7 +166,7 @@ export default function HomePage() {
       </section>
 
       {/* Categories */}
-      <section className="py-16 px-4 bg-pink-50">
+      <section ref={categoriesRef} className="py-16 px-4 bg-pink-50">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold mb-8 text-center">Explore Our Categories</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -84,16 +174,16 @@ export default function HomePage() {
               <Link
                 key={category.id}
                 href={`/products?category=${category.slug}`}
-                className="relative rounded-lg overflow-hidden group h-40"
+                className="category-card relative rounded-lg overflow-hidden group h-40 shadow-md hover:shadow-xl transition-shadow"
               >
                 <Image
                   src={category.image || "/placeholder.svg"}
                   alt={category.name}
                   fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-110"
+                  className="object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4">
-                  <h3 className="text-white font-semibold text-lg">{category.name}</h3>
+                  <h3 className="text-white font-semibold text-lg transform transition-transform duration-300 group-hover:translate-x-2">{category.name}</h3>
                 </div>
               </Link>
             ))}
@@ -102,10 +192,10 @@ export default function HomePage() {
       </section>
 
       {/* About Section */}
-      <section className="py-16 px-4">
+      <section ref={aboutRef} className="py-16 px-4">
         <div className="container mx-auto">
           <div className="flex flex-col md:flex-row items-center gap-8">
-            <div className="md:w-1/2">
+            <div className="md:w-1/2 about-content">
               <h2 className="text-3xl font-bold mb-4">Our Story</h2>
               <p className="text-gray-600 mb-4">
                 Sweet Delights Bakery was founded in 2024 with a simple mission: to create delicious, handcrafted cakes
@@ -116,12 +206,12 @@ export default function HomePage() {
                 From birthdays to weddings, our custom cakes are designed to make your special moments even more
                 memorable. We take pride in our attention to detail and commitment to quality.
               </p>
-              <Button asChild>
+              <Button asChild className="hover:scale-105 transition-transform">
                 <Link href="/about">Learn More About Us</Link>
               </Button>
             </div>
-            <div className="md:w-1/2 relative h-[400px] w-full rounded-lg overflow-hidden">
-              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2801.398637823976!2d79.90028277984767!3d6.797092022008967!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae245416b7f34b5%3A0x7bd32721ab02560e!2sUniversity%20of%20Moratuwa!5e0!3m2!1sen!2slk!4v1746711044149!5m2!1sen!2slk" width="600" height="450"></iframe>
+            <div className="md:w-1/2 relative h-[400px] w-full rounded-lg overflow-hidden shadow-lg about-map">
+              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2801.398637823976!2d79.90028277984767!3d6.797092022008967!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae245416b7f34b5%3A0x7bd32721ab02560e!2sUniversity%20of%20Moratuwa!5e0!3m2!1sen!2slk!4v1746711044149!5m2!1sen!2slk" width="100%" height="100%" style={{border:0}} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
             </div>
           </div>
         </div>

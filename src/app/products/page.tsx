@@ -1,10 +1,8 @@
-import Link from "next/link"
-import Image from "next/image"
 import { Filter } from "lucide-react"
 import { supabase } from "@/lib/supabaseClient"
 import { Product } from "@/types/database"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { ProductGrid } from "@/components/product-grid"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,19 +13,69 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
+// Sample data for fallback
+const sampleProducts: Product[] = [
+  {
+    id: 1,
+    name: "Chocolate Truffle Cake",
+    slug: "chocolate-truffle-cake",
+    price: 420.99,
+    image_url: "/img/birthday/Super-dad-300x300.png",
+    badge: "New",
+    description: "A rich chocolate truffle cake.",
+    category: "birthday",
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 2,
+    name: "Strawberry Shortcake",
+    slug: "strawberry-shortcake",
+    price: 380.99,
+    image_url: "/img/cupcake/Chocolate_Mud_Cup_Cake_1024x1024@2x.webp",
+    description: "Fresh strawberries and cream.",
+    category: "cupcakes",
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 3,
+    name: "Red Velvet Delight",
+    slug: "red-velvet-delight",
+    price: 440.99,
+    image_url: "/img/birthday/Sublime-Lime-300x300.webp",
+    badge: "New",
+    description: "Classic red velvet with cream cheese frosting.",
+    category: "birthday",
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 4,
+    name: "Lemon Blueberry Cake",
+    slug: "lemon-blueberry-cake",
+    price: 390.99,
+    image_url: "/img/cupcake/ice cream.jpeg",
+    description: "Zesty lemon with fresh blueberries.",
+    category: "cupcakes",
+    created_at: new Date().toISOString()
+  }
+]
+
 // Function to fetch products from Supabase
 async function getProducts(): Promise<Product[]> {
-  const { data, error } = await supabase
-    .from('products') // Ensure 'products' is your table name in Supabase
-    .select('*')
-    // .order('created_at', { ascending: false }) // Optional: order products
-
-  if (error) {
-    console.error('Error fetching products:', error.message)
-    // In a real app, you might want to throw the error or return a specific error state
-    return []
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+    
+    if (error) {
+      console.warn('Error fetching products from Supabase, using sample data:', error.message)
+      return sampleProducts
+    }
+    
+    return (data as Product[]) || sampleProducts
+  } catch (error) {
+    console.warn('Exception fetching products, using sample data:', error)
+    return sampleProducts
   }
-  return (data as Product[]) || []
 }
 
 export default async function ProductsPage() {
@@ -75,33 +123,7 @@ export default async function ProductsPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {products.map((product) => (
-          <Link key={product.id} href={`/products/${product.slug}`}>
-            <Card className="overflow-hidden h-full transition-all duration-200 hover:shadow-md">
-              <div className="relative h-64 w-full">
-                <Image
-                  src={product.image_url || "/placeholder.svg"} // Use image_url from Supabase
-                  alt={product.name}
-                  fill
-                  className="object-cover"
-                />
-                {product.badge && (
-                  <span className="absolute top-2 right-2 bg-pink-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
-                    {product.badge}
-                  </span>
-                )}
-              </div>
-              <CardContent className="p-4">
-                <div className="justify-center text-center mb-2">
-                  <h3 className="font-semibold text-lg">{product.name}</h3>
-                  <p className="font-bold text-pink-600">Rs.{product.price.toFixed(2)}</p>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
-      </div>
+      <ProductGrid products={products} />
     </div>
   )
 }
