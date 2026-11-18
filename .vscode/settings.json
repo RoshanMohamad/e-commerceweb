@@ -1,15 +1,9 @@
 {
-    "json.schemas": [
-        {
-            "fileMatch": [
-                "/myfile"
-            ],
-            "url": "schemaURL"
-        }
-    ],
-    "C_Cpp.autocompleteAddParentheses": true,
-    "github.copilot.nextEditSuggestions.enabled": true,
-    "github.copilot.enable": {
-        "plaintext": true
+    "chat.tools.terminal.autoApprove": {
+        "docker compose": true,
+        "Push-Location": true,
+        "npm run build": true,
+        "Pop-Location": true,
+        "npm run lint": true
     }
 }

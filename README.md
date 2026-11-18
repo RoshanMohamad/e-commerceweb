@@ -1,36 +1,187 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AutoMatrix — ecom-autoparts
 
-## Getting Started
+Intelligent shop-in-shop e-commerce platform for automobile parts, built on the MERN stack.
 
-First, run the development server:
+Multiple vendors run their own storefronts inside a single marketplace. Customers shop by vehicle
+(brand → model → variant) so they only ever see parts that fit their car, pay through Stripe, and
+track orders that are split per vendor. Vendors get their own dashboard, inventory and payouts;
+a super admin oversees the catalog, vendor approvals, commissions and settlements.
+
+## Stack
+
+| Layer    | Tech |
+| -------- | ---- |
+| Client   | React 18, Vite 5, TypeScript, Tailwind CSS, shadcn/Radix UI, React Router, TanStack Query, Zustand |
+| Server   | Node.js 22, Express 5, Mongoose 8 (MongoDB 7), JWT auth |
+| Payments | Stripe (Payment Intents + webhooks) |
+| Storage  | Cloudflare R2 (S3-compatible), with local `uploads/` fallback |
+| Email    | Nodemailer over SMTP |
+| Docs     | Swagger UI at `/api-docs` |
+| Infra    | Docker Compose, GitHub Actions CI/CD, images on GHCR |
+
+## Features
+
+- **Vehicle-aware catalog** — vehicle brand/model/variant masters, per-user garage ("My Vehicle"),
+  and fitment-filtered product browsing.
+- **Shop-in-shop marketplace** — vendors own shops, list offers against shared products
+  (`ProductSeller` / `vendorProduct`), and set their own pricing and stock.
+- **Cart → checkout → split orders** — an order fans out into per-vendor sub-orders, each with its
+  own status timeline, shipping and refund flow.
+- **Inventory reservations** — stock is held at checkout and released by a background job every
+  5 minutes if the payment never completes.
+- **Payments & money movement** — Stripe intents and webhooks, refunds, coupons, commission-based
+  settlements, vendor payouts and a customer wallet.
+- **Notifications & email** — in-app notifications plus transactional email (order, shipping,
+  refund) with retry and templated previews under `server/services/emails`.
+- **PDF documents** — invoices and shipping labels generated with PDFKit.
+- **Role-based dashboards** — customer, vendor (admin) and super admin, each with its own auth entry
+  point and analytics.
+- **AI analytics assistant** — a Gemini-backed chatbot on the super admin analytics page, scoped to
+  the data currently on screen. See [AI_CHATBOT_README.md](AI_CHATBOT_README.md).
+
+## Roles
+
+| Role          | Signs in at | Console | Can do |
+| ------------- | ----------- | ------- | ------ |
+| `CUSTOMER`    | `/auth/customer` | storefront | Browse by vehicle, cart, checkout, orders, wishlist, returns, wallet |
+| `ADMIN` (vendor) | `/auth/seller` to register, `/auth/admin` to sign in | `/admin` | Own shop, products, inventory, orders, refunds, payouts, settings |
+| `SUPER_ADMIN` | `/auth/admin` | `/superadmin` | Vendor approvals, catalog & vehicle masters, coupons, policies, settlements, analytics |
+
+Vendors sign up at `/auth/seller` with a shop name and start as pending until a super admin approves
+them. `/auth/admin` is the shared staff entry point and routes to `/admin` or `/superadmin` based on
+the account's role.
+
+## Getting started
+
+### Prerequisites
+
+- Node.js 22 (matches the `node:22-alpine` production images)
+- MongoDB 7 — run it yourself, or use the `mongo` service in `docker-compose.dev.yml`
+- A Stripe test key pair
+
+### 1. Configure environment
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env          # repo-root vars used by Docker Compose and Vite
+cp .env.example server/.env   # then fill in the server-only values below
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`server/.env` needs, beyond the Mongo and SMTP values in the example:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```env
+JWT_SECRET=...
+JWT_REFRESH_SECRET=...
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+SUPER_ADMIN_EMAIL=...
+SUPER_ADMIN_PASSWORD=...
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Optional — file uploads go to Cloudflare R2 when set, local disk otherwise
+R2_ACCOUNT_ID=
+R2_ACCESS_KEY_ID=
+R2_SECRET_ACCESS_KEY=
+R2_BUCKET_NAME=
+R2_ENDPOINT=
+R2_PUBLIC_URL=
 
-## Learn More
+# Optional — enables the super admin AI chat
+GEMINI_API_KEY=
+```
 
-To learn more about Next.js, take a look at the following resources:
+The client reads `VITE_API_URL` and `VITE_STRIPE_PUBLISHABLE_KEY` from the **repo-root** `.env`
+(`vite.config.js` sets `envDir` to the repo root).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 2. Run with Docker (recommended)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+docker compose -f docker-compose.dev.yml up --build
+```
 
-## Deploy on Vercel
+Brings up MongoDB, the API with hot reload, and the Vite dev server.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 3. Or run the two apps directly
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+# terminal 1
+cd server && npm install && npm run dev     # http://localhost:5000
+
+# terminal 2
+cd client && npm install && npm run dev     # http://localhost:3000
+```
+
+The Vite dev server proxies `/api` to the backend, so no CORS setup is needed locally.
+
+### 4. Seed data
+
+```bash
+cd server
+npm run seed            # super admin account from SUPER_ADMIN_EMAIL/PASSWORD
+npm run seed:vehicles   # vehicle brands, models, variants
+npm run seed:products   # sample catalog
+npm run seed:all        # vehicles + products
+```
+
+| URL | What |
+| --- | ---- |
+| http://localhost:3000 | Storefront |
+| http://localhost:5000 | API root |
+| http://localhost:5000/api-docs | Swagger UI |
+| http://localhost:5000/health | Health check (503 while MongoDB is down) |
+
+## Project layout
+
+```
+client/                 React + Vite storefront and dashboards
+  src/pages/            Public pages, plus admin/, superadmin/, auth/
+  src/components/       UI and feature components
+  src/lib/api.ts        Typed API client
+  src/store/            Zustand stores
+server/
+  index.js              Express app: middleware, route mounts, Mongo connection
+  routes/               ~29 route modules mounted under /api/*
+  controllers/          Request handlers
+  services/             Business logic (payment, refund, settlement, shipping,
+                        inventory reservation, invoice, notification, email, storage)
+  models/               Mongoose schemas
+  middleware/           Auth, request validators, centralized error handler
+  jobs/                 Background jobs (expired reservation release)
+  scripts/              Seeders, unit test runner, R2 migration
+docker-compose.dev.yml  Local development stack
+docker-compose.prod.yml Local production-like stack
+docker-compose.deploy.yml Stack used on the VPS by the CD workflow
+```
+
+### API surface
+
+All routes are mounted under `/api`: `auth`, `users`, `vendors`, `shops`, `vehicles`, `categories`,
+`products`, `offers`, `cart`, `wishlist`, `orders`, `payments`, `shipping`, `refunds`, `addresses`,
+`coupons`, `settlements`, `policies`, `notifications`, `inventory`, `admin-analytics`, `upload`.
+Browse them interactively at `/api-docs`.
+
+> Note: `POST /api/payments/webhook` is mounted with a raw body parser **before** `express.json()`
+> so Stripe signature verification works. Keep it that way.
+
+## Quality checks
+
+```bash
+cd client && npm run lint          # ESLint
+cd client && npx tsc --noEmit      # typecheck (reported, not yet enforced)
+cd client && npm run build
+
+cd server && npm run lint
+cd server && npm run qa:regression # unit tests, no MongoDB required
+```
+
+CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) runs all of the above on every push and PR
+to `main`/`dev`, and also builds both production Docker images. The client typecheck is currently
+`continue-on-error` while pre-existing type errors are worked down.
+
+## Deployment
+
+Pushing to `main` triggers [.github/workflows/cd.yml](.github/workflows/cd.yml): it builds both
+production images, pushes them to GHCR, deploys them to the VPS with
+`docker-compose.deploy.yml`, and gates on the `/health` endpoint.
+
+Required GitHub secrets, VPS prerequisites, the R2 file-storage setup and the rollback procedure are
+documented in [DEPLOYMENT.md](DEPLOYMENT.md). The one thing worth knowing up front: `VITE_*` values
+are baked into the client bundle at build time, so changing them requires a rebuild, not a restart.
