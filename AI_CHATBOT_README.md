@@ -1,7 +1,6 @@
 # AI Analytics Chatbot - AutoMatrix SuperAdmin Dashboard
 
 This README details the design, architecture, configuration, and resilience mechanisms of the stateless AI Chatbot integrated into the SuperAdmin Analytics view (`/superadmin/analytics`).
-
 ---
 
 ## 📋 Features & User Experience
