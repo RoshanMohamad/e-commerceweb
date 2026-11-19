@@ -184,14 +184,14 @@ const Navbar: React.FC = () => {
       animate={{ y: 0 }}
       className="sticky top-0 z-50 w-full border-b border-border/50 glass-card"
     >
-      <div className="container flex h-16 items-center justify-between gap-4">
+      <div className="container flex h-16 items-center justify-between gap-2 sm:gap-4">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
           <div className="relative">
             <div className="absolute inset-0 bg-primary/30 blur-xl rounded-full" />
-            <Car className="relative h-8 w-8 text-primary" />
+            <Car className="relative h-6 w-6 sm:h-8 sm:w-8 text-primary" />
           </div>
-          <span className="font-display text-xl font-bold tracking-wider text-foreground">
+          <span className="font-display text-base sm:text-xl font-bold tracking-wider text-foreground">
             AUTO<span className="text-primary">MATRIX</span>
           </span>
         </Link>
@@ -262,7 +262,7 @@ const Navbar: React.FC = () => {
         )}
 
         {/* Actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-0.5 sm:gap-2 shrink-0">
           {/* Theme Toggle */}
           <ThemeToggle />
 
@@ -271,7 +271,7 @@ const Navbar: React.FC = () => {
 
           {/* Wishlist */}
           {user && (
-            <Link to="/wishlist">
+            <Link to="/wishlist" className="hidden md:inline-flex">
               <Button variant="ghost" size="icon" className="relative">
                 <Heart className={`h-5 w-5 ${wishlistIds.length > 0 ? 'fill-red-500 text-red-500' : ''}`} />
                 {wishlistIds.length > 0 && (
@@ -285,7 +285,7 @@ const Navbar: React.FC = () => {
 
           {/* Compare */}
           {compareItems.length > 0 && (
-            <Link to="/compare">
+            <Link to="/compare" className="hidden md:inline-flex">
               <Button variant="ghost" size="icon" className="relative">
                 <GitCompare className="h-5 w-5 text-primary" />
                 <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-bold">
@@ -414,6 +414,10 @@ const Navbar: React.FC = () => {
                   </Link>
                 ))}
                 
+                <Link to="/cart" className="text-lg font-medium transition-all hover:text-black dark:hover:text-black hover:font-bold">
+                  Cart{cartCount > 0 ? ` (${cartCount})` : ''}
+                </Link>
+
                 {/* Mobile Policies Section */}
                 <DropdownMenuSeparator />
                 <div className="text-lg font-medium text-primary flex items-center gap-2 mb-2">
